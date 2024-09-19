@@ -81,7 +81,7 @@ struct Solve {
             if (getHash(i, i + n - 1) == hashID) res.push_back(i);
         }
         cout << sz(res) << "\n";
-        for (auto x : res) cout << x << " "; 
+        for (auto x : res) cout << x - 1 << " "; 
     }
 } minhntq;
 

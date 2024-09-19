@@ -42,12 +42,100 @@ mt19937 rd(time(0));
 #define MAX 
 
 struct Solve {
-    void input() {
-        
+    struct Date {
+        int day, month, year;
+        Date() {}
+    };
+	struct SoTietKiem {
+        string ma_so;
+        string loai_tiet_kiem;
+        string ho_ten;
+        int cmnd;
+        Date date;
+        double so_tien_gui;
+        SoTietKiem() {}
+    };
+    int n;
+    vector<SoTietKiem> flights;
+   
+    void input() { // input
+        cin >> n; string tmp; getline(cin, tmp);
+        REP(i, n) {
+            flights.push_back(Flight());
+            getline(cin, flights[i].flight_id);
+            while (true) {
+                bool ok = true;
+                for (auto x : flights[i].flight_id) 
+                    if (x == ' ') ok = false;
+                    else {
+                        if (x < '0' || x > '9') 
+                        if (x < 'a' || x > 'z') 
+                        if (x < 'A' && x > 'Z') ok= false;
+                    }
+                if (ok == true) break;
+                cout << "Nhap lai ma so chuyen bay: ";
+                getline(cin, flights[i].flight_id);
+            }
+
+            cin >> flights[i].date.day >> flights[i].date.month >> flights[i].date.year; getline(cin, tmp);
+            getline(cin, flights[i].time_take_off);
+            getline(cin, flights[i].departure);
+            getline(cin, flights[i].arrival);
+        }
+
+        // REP(i, n) {
+        //     cout << flights[i].flight_id << "\n";
+        //     cout << flights[i].date.day << "/" << flights[i].date.month << "/" << flights[i].date.year << "\n";
+        //     cout << flights[i].time_take_off << "\n";
+        //     cout << flights[i].departure << "\n";
+        //     cout << flights[i].arrival << "\n";
+        // }
+    }
+    bool is_lower_date(Date& A, Date& B) { // compare to date whether date A stands before or after date B 
+        if (A.year < B.year) return true;
+        if (A.year > B.year) return false;
+        if (A.month < B.month) return true;
+        if (A.month > B.month) return false;
+        if (A.day <= B.day) return true;
+        return false;
+    }
+    bool is_lower_time(string s1, string s2) { // compare two time whether time s1 stands before or after time s2
+        int x = (s1[0] - '0')*10 + (s1[1] - '0');
+        int y = (s1[3] - '0')*10 + (s1[4] - '0');
+        int a = (s2[0] - '0')*10 + (s2[1] - '0');
+        int b = (s2[3] - '0')*10 + (s2[4] - '0');
+        if (x < a) return true;
+        if (x > a) return false;
+        if (y <= b) return true;
+        return false;
     }
     void solve() {
-		
-	}
+        // sort
+        sort(ALL(flights), [&](Flight& A, Flight& B){
+            if (is_lower_date(A.date, B.date)) return true;
+            if (is_lower_time(A.time_take_off, B.time_take_off)) return true;
+            return false;
+        });
+
+        // print arranged flight
+        cout << "Danh sach chuyen bay duoc sap xep la:\n";
+        REP(i, n) {
+            cout << flights[i].flight_id << "\n";
+        }
+        // find function
+        cout << "Nhap ma chuyen bay can tim:";
+        string st; getline(cin, st);
+        REP(i, n) if (flights[i].flight_id == st) {
+            cout << "Da tim thay\n";
+            cout << flights[i].flight_id << "\n";
+            cout << flights[i].date.day << "/" << flights[i].date.month << "/" << flights[i].date.year << "\n";
+            cout << flights[i].time_take_off << "\n";
+            cout << flights[i].departure << "\n";
+            cout << flights[i].arrival << "\n";
+            return;
+        }
+        cout << "Khong tim thay chuyen bay";
+    }
 } minhntq;
 
 void solve() {

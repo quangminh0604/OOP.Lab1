@@ -2,7 +2,7 @@
 using namespace std;
 
 struct Solve {
-    void solve() {
+    void solve() { 
         int x, y; cin >> x >> y;
         int a, b; cin >> a >> b;
         if (x * b >= a * y) cout << x << "/" << y;
