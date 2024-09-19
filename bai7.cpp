@@ -80,7 +80,7 @@ struct Solve {
 		}
 
 		FOR(i, 1, n) {
-			cout << std[i].avr << " " << std[i].type << "\n";
+			cout << std[i].full_name << " " << std[i].avr << " " << std[i].type << "\n";
 		}
 		cout << "Hoc sinh co diem trung binh cao nhat la:\n" << std[highest].full_name << "\n";
 		cout << "Danh sach hoc sinh co diem toan thap nhat la:\n";

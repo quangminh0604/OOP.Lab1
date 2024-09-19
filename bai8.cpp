@@ -122,7 +122,7 @@ struct Solve {
             cout << flights[i].flight_id << "\n";
         }
         // find function
-        cout << "Nhap ma chuyen bay can tim:";
+        cout << "Nhap ma chuyen bay, noi di va noi den can tim:";
         string st; getline(cin, st);
         REP(i, n) if (flights[i].flight_id == st) {
             cout << "Da tim thay\n";
