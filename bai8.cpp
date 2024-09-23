@@ -71,6 +71,19 @@ struct Solve {
         string arrival;
         string departure;
         Flight() {}
+        void output() {
+            cout << "Ma so chuyen bay: ";
+            cout << flight_id << "\n";
+            cout << "Ngay bay:";
+            cout << date.day << "/" << date.month << "/" << date.year << "\n";
+            cout << "Thoi gian cat canh:";
+            cout << time_take_off << "\n";
+            cout << "Dia diem khoi hanh: ";
+            cout << departure << "\n";
+            cout << "Diem den: ";
+            cout << arrival << "\n";
+            cout << "\n";
+        }
     };
     int n;
     vector<Flight> flights;
@@ -85,6 +98,7 @@ struct Solve {
             
             while (true) {
                 bool ok = true;
+                if (sz(flights[i].flight_id) > 5) ok = false;
                 for (auto x : flights[i].flight_id) 
                     if (x == ' ') ok = false;
                     else {
@@ -159,6 +173,7 @@ struct Solve {
             getline(cin, flights[i].departure);
              while (true) {
                 bool ok = true;
+                if (sz(flights[i].departure) > 20) ok = false;
                 for (auto c : flights[i].departure) {
                     if ('0' <= c && c <= '9') ok = false;
                     if (c < 'a' || c > 'z')
@@ -174,6 +189,7 @@ struct Solve {
             getline(cin, flights[i].arrival);
              while (true) {
                 bool ok = true;
+                if (sz(flights[i].arrival) > 20) ok = false;
                 for (auto c : flights[i].arrival) {
                     if (c >= '0' && c <= '9') ok = false;
                     if (c < 'a' || c > 'z')
@@ -228,16 +244,19 @@ struct Solve {
         // find functi on
         cout << "Nhap ma chuyen bay, noi di va noi den can tim:";
         string st; getline(cin, st);
+        bool found = false;
         REP(i, n) if (flights[i].flight_id == st) {
             cout << "Da tim thay\n";
-            cout << flights[i].flight_id << "\n";
-            cout << flights[i].date.day << "/" << flights[i].date.month << "/" << flights[i].date.year << "\n";
-            cout << flights[i].time_take_off << "\n";
-            cout << flights[i].departure << "\n";
-            cout << flights[i].arrival << "\n";
-            return;
+            flights[i].output();
+            found = true;
         }
-        cout << "Khong tim thay chuyen bay";
+        if (found == false) cout << "Khong tim thay chuyen bay\n";
+        cout << "Nhap dia diem khoi hanh de tim tat ca chuyen bay:";
+        string departure; getline(cin, departure);
+        REP(i, n) if (departure == flights[i].departure) flights[i].output();
+        cout << "Nhap diem den de tim tat ca chuyen bay:";
+        string arrival; getline(cin, arrival);
+        REP(i, n) if (arrival == flights[i].arrival) flights[i].output();
     }
 } minhntq;
 
