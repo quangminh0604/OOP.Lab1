@@ -40,15 +40,33 @@ const int dy[] = {0, 1, 0, -1, 1, -1, -1, 1};
 mt19937 rd(time(0));
  
 #define MAX 
-
+bool date_31[13]; 
+            
 struct Solve {
     struct Date {
         int day, month, year;
         Date() {}
+        bool is_leap(int year) {
+            if (year % 100) return year % 400 == 0;
+            return year % 4 == 0;
+        }
+        bool check_valid() {
+            if (month < 1 || month > 12) return false;
+            if (day < 1 || day > 31) return false;
+            if (month == 2) {
+                if (is_leap(year)) {
+                    if (day > 28) return false;
+                } else if (day > 29) return false;
+            }
+            if (date_31[month] == false && day == 31) return false;
+            if (year < 0) return false;
+            return true;
+        }
     };
 	struct Flight {
         string flight_id;
         Date date;
+        string date_string;
         string time_take_off;
         string arrival;
         string departure;
@@ -60,8 +78,11 @@ struct Solve {
     void input() { // input
         cin >> n; string tmp; getline(cin, tmp);
         REP(i, n) {
+            //cout << i << "\n";
             flights.push_back(Flight());
+            cout << "Nhap ma so chuyen bay: ";
             getline(cin, flights[i].flight_id);
+            
             while (true) {
                 bool ok = true;
                 for (auto x : flights[i].flight_id) 
@@ -69,17 +90,100 @@ struct Solve {
                     else {
                         if (x < '0' || x > '9') 
                         if (x < 'a' || x > 'z') 
-                        if (x < 'A' && x > 'Z') ok= false;
+                        if (x < 'A' || x > 'Z') ok= false;
                     }
                 if (ok == true) break;
-                cout << "Nhap lai ma so chuyen bay: ";
+                cout << "Ma so loi, Nhap lai ma so chuyen bay: ";
                 getline(cin, flights[i].flight_id);
             }
+            //
+            cout << "Nhap ngay bay:";
+            getline(cin, flights[i].date_string);
+            
+            while (true) {
+                bool ok = true;
+                int x = 0, cnt = 0;
+                for (auto c : flights[i].date_string) {
+                    if (c == '-') {
+                        ok = false;
+                        break;
+                    }
+                    else 
+                    if (c == ' ') {
+                        cnt++;
+                        if (cnt == 1) flights[i].date.day = x;
+                        if (cnt == 2) flights[i].date.month = x;
+                        x = 0;
+                    } 
+                    else if (x == 0 && c == '0') {
+                        ok = false;
+                        break;
+                    } else x = x * 10 + (c - '0');
+                }
+                flights[i].date.year = x;
+                if (flights[i].date.check_valid() == false) ok = false;
+                if (ok == true) break;
+                cout << "Ngay bay loi, Nhap lai ngay bay: ";
+                getline(cin, flights[i].date_string);
+            }
 
-            cin >> flights[i].date.day >> flights[i].date.month >> flights[i].date.year; getline(cin, tmp);
+            cout << "Nhap thoi gian cat canh:";
             getline(cin, flights[i].time_take_off);
+            while (true) {
+                bool ok = true;
+                int x = 0, cnt = 0, hour = -1, minute = -1;
+                for (auto c : flights[i].time_take_off) {
+                    if (c == '-') {
+                        ok = false;
+                        break;
+                    }
+                    else 
+                    if (c == ':') {
+                        hour = x;
+                        x = 0;
+                    } 
+                    else if (x == 0 && c == '0') {
+                        ok = false;
+                        break;
+                    } else x = x * 10 + (c - '0');
+                }
+                minute = x;
+                if (minute < 0 || minute > 59) ok = false;
+                if (hour < 0 || hour > 59) ok = false;
+                if (ok == true) break;
+                cout << "Thoi gian cat canh loi, Nhap lai thoi gian cat canh: ";
+                getline(cin, flights[i].time_take_off);
+            }
+
+            cout << "Nhap dia diem khoi hanh: ";
             getline(cin, flights[i].departure);
+             while (true) {
+                bool ok = true;
+                for (auto c : flights[i].departure) {
+                    if ('0' <= c && c <= '9') ok = false;
+                    if (c < 'a' || c > 'z')
+                    if (c < 'A' || c > 'Z') ok = false;
+                }
+                if (ok == true) break;
+                cout << "Dia diem sai quy chuan, nhap lai dia diem khoi hanh: ";
+                getline(cin, flights[i].departure);
+            }
+
+
+            cout << "Nhap diem den: ";
             getline(cin, flights[i].arrival);
+             while (true) {
+                bool ok = true;
+                for (auto c : flights[i].arrival) {
+                    if (c >= '0' && c <= '9') ok = false;
+                    if (c < 'a' || c > 'z')
+                    if (c < 'A' || c > 'Z') ok = false;
+                }
+                if (ok == true) break;
+                cout << "Diem den sai quy chuan, nhap lai diem den: ";
+                getline(cin, flights[i].arrival);
+            }
+
         }
 
         // REP(i, n) {
@@ -121,7 +225,7 @@ struct Solve {
         REP(i, n) {
             cout << flights[i].flight_id << "\n";
         }
-        // find function
+        // find functi on
         cout << "Nhap ma chuyen bay, noi di va noi den can tim:";
         string st; getline(cin, st);
         REP(i, n) if (flights[i].flight_id == st) {
@@ -138,16 +242,18 @@ struct Solve {
 } minhntq;
 
 void solve() {
+    memset(date_31, false, sizeof date_31);
+    date_31[1] = date_31[3] = date_31[5] = date_31[7] = date_31[8] = true;
+    date_31[10] = date_31[12] = true;
 	minhntq.input();
 	minhntq.solve();
 }
  
 int main() {
         ios_base::sync_with_stdio(false);
-        cin.tie(0);
         #ifndef ONLINE_JUDGE
-        freopen("bai8.inp", "r", stdin);
-        freopen("bai8.out", "w", stdout);
+        //freopen("bai8.inp", "r", stdin);
+        //freopen("bai8.out", "w", stdout);
         #else
         //
         #endif // ONLINE_JUDGE*/
@@ -155,3 +261,4 @@ int main() {
         while (t--) solve();
     return 0;
 }
+
